@@ -1,5 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+
 
 export default function Layout() {
   const [serverStatus, setServerStatus] = useState<'checking' | 'online' | 'offline'>('offline');
@@ -7,35 +9,23 @@ export default function Layout() {
 
   // Función para verificar el estado del servidor solo cuando se presiona el botón
   const checkServerStatus = async () => {
-    setIsChecking(true);
-    setServerStatus('checking');
-    
-    try {
-      // Usar el endpoint de health check
-      const response = await fetch('http://localhost:4000/api/health', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        // Verificar si el servidor y la base de datos están OK
-        if (data.status === "OK" && data.database === "connected") {
-          setServerStatus('online');
-        } else {
-          setServerStatus('offline');
-        }
-      } else {
-        setServerStatus('offline');
-      }
-    } catch (error) {
+  setIsChecking(true);
+  setServerStatus('checking');
+
+  try {
+    const { data } = await axios.get('/api/health');
+    if (data.status === 'OK' && data.database === 'connected') {
+      setServerStatus('online');
+    } else {
       setServerStatus('offline');
-    } finally {
-      setIsChecking(false);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setServerStatus('offline');
+  } finally {
+    setIsChecking(false);
+  }
+};
 
   return (
     <>
