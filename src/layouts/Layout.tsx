@@ -13,7 +13,8 @@ export default function Layout() {
   setServerStatus('checking');
 
   try {
-    const { data } = await axios.get('/api/health');
+    const url = `${import.meta.env.VITE_API_URL}/api/health`;
+    const { data } = await axios.get(url);
     if (data.status === 'OK' && data.database === 'connected') {
       setServerStatus('online');
     } else {
