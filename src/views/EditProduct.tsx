@@ -10,7 +10,6 @@ import {
 } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import {
-  addProduct,
   getProductsById,
   updateProduct,
 } from "../services/ProductService";
@@ -45,10 +44,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 }
 
-const availabilityOptions = [
-  { name: "Disponible", value: true },
-  { name: "No Disponible", value: false },
-];
 
 export default function EdidtProduct() {
   const product = useLoaderData() as Product;
