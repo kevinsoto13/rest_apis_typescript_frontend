@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 
+         text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg 
+         hover:shadow-blue-500/25 transition-all duration-300 transform 
+         hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/30 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-gradient-to-r from-red-700 to-pink-700 hover:from-red-600 hover:to-pink-600 
+         text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg 
+         hover:shadow-red-500/25 transition-all duration-300 transform 
+         hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/30 cursor-pointer;
+}
