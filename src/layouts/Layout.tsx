@@ -1,7 +1,8 @@
 import { Link, Outlet } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import N8nChat from "../components/N8Nchat";
+import N8nChat from "../components/N8nChat";
+
 
 
 
