@@ -1,6 +1,8 @@
 import { Link, Outlet } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import N8nChat from "../components/N8Nchat";
+
 
 
 export default function Layout() {
@@ -124,6 +126,9 @@ export default function Layout() {
 
         <Outlet />
       </main>
+
+      {/* Aquí se monta el chat */}
+      <N8nChat />
     </>
   );
 }
