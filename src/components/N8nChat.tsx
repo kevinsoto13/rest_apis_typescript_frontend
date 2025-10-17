@@ -4,9 +4,9 @@ import { createChat } from "@n8n/chat";
 
 export default function N8nChat() {
   useEffect(() => {
+    const API_URL = import.meta.env.VITE_API_URL;
     createChat({
-      webhookUrl:
-        "http://localhost:5678/webhook/0e8af238-6bad-4085-900f-e5ea5fe24b3e/chat", // Cambia esto por tu URL real
+      webhookUrl: `${API_URL}/webhook/0e8af238-6bad-4085-900f-e5ea5fe24b3e/chat`, // Cambia esto por tu URL real
 
       // Opcional: puedes personalizar otros parámetros aquí
       initialMessages: [
