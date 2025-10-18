@@ -1,37 +1,19 @@
-import { Link, useLoaderData, useNavigation, type ActionFunctionArgs } from "react-router-dom";
-import {
-  getProducts,
-  updateProductAvailability,
-} from "../services/ProductService";
+import { Link, useLoaderData, useNavigation } from "react-router-dom";
 import ProductDetail from "../components/ProductDetail";
-import type { Product } from "../types";
 import Spinner from "../components/Spinner";
 import { useState } from "react";
-
-export async function loader() {
-  const products = await getProducts();
-  return products;
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  const data = Object.fromEntries(await request.formData());
-  await updateProductAvailability(+data.id);
-  return {};
-}
+import type { Product } from "../types";
 
 export default function Products() {
-  const products = useLoaderData() as Product[];
-
+  const products = useLoaderData() as Product[] | undefined;
   const navigation = useNavigation();
   const [isUpdating, setIsUpdating] = useState(false);
-  // Mostrar spinner durante la carga inicial o recarga
+
   const isLoading = navigation.state === "loading";
 
-  // Función para exponer el estado de actualización a los componentes hijos
   const setGlobalUpdating = (updating: boolean) => {
     setIsUpdating(updating);
   };
-
 
   return (
     <div className="relative min-h-screen">
@@ -43,12 +25,11 @@ export default function Products() {
 
       <div className="relative z-10 flex items-center justify-center p-4">
         <div className="w-full max-w-2xl">
-          {/* Contenedor principal unificado - MISMO DISEÑO QUE NEWPRODUCTS */}
+          {/* Contenedor principal */}
           <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 overflow-hidden">
-            {/* Header unificado - MISMO DISEÑO QUE NEWPRODUCTS */}
+            {/* Header */}
             <div className="bg-gradient-to-r from-slate-900 via-gray-900 to-slate-800 p-6 border-b border-slate-700">
               <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                {/* Left - Title */}
                 <div className="flex-1">
                   <div className="flex items-center space-x-3">
                     <div>
@@ -65,7 +46,6 @@ export default function Products() {
                   </div>
                 </div>
 
-                {/* Right - Button */}
                 <div className="flex flex-col items-end">
                   <Link to="productos/nuevo" className="btn-primary">
                     <div className="flex items-center space-x-2">
@@ -89,18 +69,10 @@ export default function Products() {
               </div>
             </div>
 
-            {/* Contenido de productos - Aquí irá tu lista de productos */}
             {/* Contenido de productos */}
             <div className="p-6 relative">
               {/* Overlay de carga inicial */}
-              {isLoading && (
-                <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center z-20 rounded-2xl">
-                  <Spinner />
-                </div>
-              )}
-              
-              {/* Overlay de actualización de producto */}
-              {isUpdating && (
+              {(isLoading || isUpdating) && (
                 <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center z-20 rounded-2xl">
                   <Spinner />
                 </div>
@@ -120,18 +92,14 @@ export default function Products() {
                     {!products || products.length === 0 ? (
                       <tr>
                         <td colSpan={4} className="p-8 text-center">
-                          {isLoading ? (
-                            <Spinner />
-                          ) : (
-                            <p className="text-gray-500">No products found</p>
-                          )}
+                          {isLoading ? <Spinner /> : <p className="text-gray-500">No products found</p>}
                         </td>
                       </tr>
                     ) : (
                       products.map((product) => (
-                        <ProductDetail 
-                          key={product.id} 
-                          product={product} 
+                        <ProductDetail
+                          key={product.id}
+                          product={product}
                           setGlobalUpdating={setGlobalUpdating}
                         />
                       ))
@@ -142,13 +110,11 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Bottom decoration - MISMO DISEÑO QUE NEWPRODUCTS */}
+          {/* Bottom decoration */}
           <div className="mt-8 text-center">
             <div className="inline-flex items-center space-x-2 bg-slate-100/80 backdrop-blur-sm px-5 py-2 rounded-full border border-slate-200/50">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-slate-600 text-sm font-medium">
-                Secure & Fast Processing
-              </span>
+              <span className="text-slate-600 text-sm font-medium">Secure & Fast Processing</span>
             </div>
           </div>
         </div>
