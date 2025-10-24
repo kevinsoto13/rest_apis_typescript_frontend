@@ -1,8 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import Layout from "./layouts/Layout";
-import Products from "./views/Products";
-import NewProduct, {action as newProductAction} from "./views/NewProduct";
-import EdidtProduct, {loader as editProductLoader, action as editProductAction} from "./views/EditProduct";
+
+// Lazy imports
+const Products = lazy(() => import("./views/Products"));
+const NewProduct = lazy(() => import("./views/NewProduct"));
+const EditProduct = lazy(() => import("./views/EditProduct"));
+
+// Actions / loaders
+import { action as newProductAction } from "./views/NewProduct";
+import { loader as editProductLoader, action as editProductAction } from "./views/EditProduct";
 import { action as deleteProductAction } from "./components/ProductDetail";
 import { fetchProducts } from "./views/products/loader";
 import { updateAvailability } from "./views/products/actions";
@@ -10,29 +17,45 @@ import { updateAvailability } from "./views/products/actions";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <Suspense fallback={<div>Cargando...</div>}>
+        <Layout />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
-        element: <Products />,
+        element: (
+          <Suspense fallback={<div>Cargando productos...</div>}>
+            <Products />
+          </Suspense>
+        ),
         loader: fetchProducts,
-        action: updateAvailability
+        action: updateAvailability,
       },
       {
         path: "/productos/nuevo",
-        element: <NewProduct />,
+        element: (
+          <Suspense fallback={<div>Cargando formulario...</div>}>
+            <NewProduct />
+          </Suspense>
+        ),
         action: newProductAction,
       },
       {
-        path: 'productos/:id/editar',
-        element: <EdidtProduct/>,
+        path: "productos/:id/editar",
+        element: (
+          <Suspense fallback={<div>Cargando producto...</div>}>
+            <EditProduct />
+          </Suspense>
+        ),
         loader: editProductLoader,
-        action: editProductAction
+        action: editProductAction,
       },
       {
-        path: 'productos/:id/eliminar',
-        action: deleteProductAction
-      }
+        path: "productos/:id/eliminar",
+        action: deleteProductAction,
+      },
     ],
   },
 ]);
